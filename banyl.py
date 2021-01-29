@@ -2,6 +2,7 @@
 # Copyright (C) jesus1554 MIT Licence
 
 import eyed3
+import eyed3.plugins.art
 import requests
 import os
 
@@ -15,4 +16,7 @@ for file_name in os.listdir('exampledir/'):
     print(file_name)
 
 audiofile = eyed3.load("exampledir/Billie Eilish - bad guy.mp3")
-print(audiofile.tag.album)
+# audiofile.tag.images.set(3, open('test-art.jpg','rb').read(), 'image/jpeg')
+
+# audiofile.tag.save()
+print(audiofile.tag.title)
