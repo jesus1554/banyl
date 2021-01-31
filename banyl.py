@@ -8,11 +8,8 @@ import eyed3.plugins.art
 import requests
 import json
 import wget
+import shutil
 
-# raw = requests.get('https://api.deezer.com/album/302127')
-
-# res = raw.json()
-# print(res)
 
 
 def getDir():
@@ -31,7 +28,7 @@ def checkDir(path):
             return True
         else:
             return False
-
+            
 
 def checkSong(userRequest):
     rawResponse = requests.get(
@@ -50,7 +47,7 @@ def getSong(title):
     if targetId:
         rawResponse = requests.get(f'https://api.deezer.com/track/{targetId}')
         res = json.loads(rawResponse.text)
-        print(res["album"]["title"])
+        return res
     else:
         pass
 
@@ -63,11 +60,19 @@ def editTags(path):
             newTags = getSong(songTitle)
 
             audiofile.initTag()
+
             # Updating music tags from Deezer.com
             audiofile.tag.artist = newTags["artist"]["name"]
             audiofile.tag.album = newTags["album"]["title"]
             audiofile.tag.album_artist = newTags["artist"]["name"]
             audiofile.tag.title = newTags["title"]
+            audiofile.tag.track_num = newTags["track_position"]
+
+            # Release Year
+            rawReleaseDate = newTags["release_date"]
+            releaseDate = rawReleaseDate.split('-')
+            audiofile.tag.release_date = releaseDate[0]
+            audiofile.tag.recording_date = releaseDate[0]
 
             # Updating art work
             updateArtWork(audiofile, newTags)
@@ -83,7 +88,16 @@ def updateArtWork(song, tags):
     else:
         os.mkdir("img-cache")
 
-    print(tags["album"])
+    # Download ArtWork
+    wget.download(tags["album"]["cover_big"], 'img-cache')
+    
+    # Renaming
+    os.rename('img-cache/500x500-000000-80-0-0.jpg', f'img-cache/{tags["id"]}.jpg')
+    print('\n')
+    
+    # Apply changes
+    song.tag.images.set(3, open(f'img-cache/{tags["id"]}.jpg', 'rb').read(), 'image/jpeg')
+    song.tag.save()
 
 
 def separator():
@@ -95,6 +109,9 @@ if __name__ == "__main__":
     dirValidation = checkDir(songsDir)
     if dirValidation:
         editTags(songsDir)
+        print('All Done!')
+        print('Deleting cache...')
+        shutil.rmtree('img-cache')
     else:
         print(
             'Sorry, for now, Banyl only accepts folders with all the files in mp3 format.')
