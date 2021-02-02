@@ -4,7 +4,6 @@
 import os
 
 import eyed3
-# import eyed3.plugins.art
 import requests
 import json
 import wget
@@ -51,8 +50,8 @@ def editTags(path):
             songTitle = file_name.replace('.mp3', '')
             newTags = getSong(songTitle)
 
-            audiofile.initTag()
             audiofile.tag.clear()
+            audiofile.initTag()
 
             # Updating music tags from Deezer.com
             audiofile.tag.artist = newTags["artist"]["name"]
