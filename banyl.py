@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 # Banyl 2021
 # Copyright (C) jesus1554 MIT Licence
 
@@ -13,6 +14,9 @@ import shutil
 from termcolor import colored
 from extras import *
 
+successFiles = 0
+ignoredFiles = 0
+notFoundFiles= 0
 
 def getDir():
     dirpath = input(f"{infoStr} Give the path of your music directory: ")
@@ -25,11 +29,14 @@ def getDir():
 
 
 def checkSong(userRequest):
+    global notFoundFiles
+
     rawResponse = requests.get(
         f'https://api.deezer.com/search?q="{userRequest}"')
     res = json.loads(rawResponse.text)
     if res["total"] == 0:
         print(colored("[⚠] Song not found :(", 'red'))
+        notFoundFiles += 1
         return False
     else:
         idSong = res["data"][0]["id"]
@@ -50,6 +57,7 @@ def getSong(title):
 
 
 def editTags(path):
+    global successFiles, ignoredFiles
 
     print(f'{infoStr} Working on {path}')
 
@@ -86,11 +94,17 @@ def editTags(path):
 
                 audiofile.tag.save()
                 print(f'{successStr} All the tags from {newTags["title"]} are set!')
-            
+                
+                successFiles += 1
+
+                separator('green')
+
             else:
                 pass
         else:
             print(f"{warningStr} {file_name} is not a compatible file extension. Skipping...")
+            ignoredFiles += 1
+
             pass
 
 
@@ -122,6 +136,9 @@ if __name__ == "__main__":
     songsDir = getDir()
     editTags(songsDir)
     print(colored('[✔] All the music files was edited. Done!', 'green'))
+    print(f'{successStr} {successFiles} was correctly edited.')
+    print(f'{warningStr} {ignoredFiles} was ignored.')
+    print(f'{dangerStr} {notFoundFiles} was not found.')
     print(f'{infoStr} Deleting cache...')
     
     shutil.rmtree('img-cache')
