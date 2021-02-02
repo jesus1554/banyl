@@ -18,16 +18,16 @@ from extras import *
 
 successFiles = 0
 ignoredFiles = 0
-notFoundFiles= 0
+notFoundFiles = 0
 
-def getDir():
-    dirpath = input(f"{infoStr} Give the path of your music directory: ")
+
+def getDir(path):
+    dirpath = path
     if os.path.isdir(dirpath):
         return dirpath
     else:
-        print(colored("[⚠] Whoops! The path doesn't exist, try again!", 'red'))
-        dirpath = getDir()
-        return dirpath
+        print(colored("[⚠] Whoops! There was an error on the path, it doesn't exist or you forgot to put it!. \nTry again executing the program like this: python3 banyl.py [PATH]", 'red'))
+        exit()
 
 
 def checkSong(userRequest):
@@ -69,7 +69,7 @@ def editTags(path):
 
             audiofile = eyed3.load(f"{path}/{file_name}")
             songTitle = file_name.replace('.mp3', '')
-    
+
             newTags = getSong(songTitle)
 
             if newTags:
@@ -88,15 +88,16 @@ def editTags(path):
                 releaseDate = rawReleaseDate.split('-')
                 audiofile.tag.release_date = releaseDate[0]
                 audiofile.tag.recording_date = releaseDate[0]
-                
+
                 print(f'{infoStr} The basic tags are set!')
 
                 # Updating art work
                 updateArtWork(audiofile, newTags)
 
                 audiofile.tag.save()
-                print(f'{successStr} All the tags from {newTags["title"]} are set!')
-                
+                print(
+                    f'{successStr} All the tags from {newTags["title"]} are set!')
+
                 successFiles += 1
 
                 separator('green')
@@ -104,7 +105,8 @@ def editTags(path):
             else:
                 pass
         else:
-            print(f"{warningStr} {file_name} is not a compatible file extension. Skipping...")
+            print(
+                f"{warningStr} {file_name} is not a compatible file extension. Skipping...")
             ignoredFiles += 1
 
             pass
@@ -129,19 +131,34 @@ def updateArtWork(song, tags):
     song.tag.save()
 
 
+def rmCache():
+    if os.path.isdir("img-cache"):
+        shutil.rmtree('img-cache')
+    else:
+        pass
+
 if __name__ == "__main__":
-    # Init Welcome!
-    initWelcome()
+    try:
+        # Init Welcome!
+        initWelcome()
 
-    separator('cyan')
+        separator('cyan')
 
-    songsDir = getDir()
-    editTags(songsDir)
-    print(colored('[✔] All the music files was edited. Done!', 'green'))
-    print(f'{successStr} {successFiles} was correctly edited.')
-    print(f'{warningStr} {ignoredFiles} was ignored.')
-    print(f'{dangerStr} {notFoundFiles} was not found.')
-    print(f'{infoStr} Deleting cache...')
-    
-    shutil.rmtree('img-cache')
-    
+        songsDir = getDir(sys.argv[1])
+        editTags(songsDir)
+        print(colored('[✔] All the music files was edited. Done!', 'green'))
+        print(f'{successStr} {successFiles} was correctly edited.')
+        print(f'{warningStr} {ignoredFiles} was ignored.')
+        print(f'{dangerStr} {notFoundFiles} was not found.')
+        print(f'{infoStr} Deleting cache...')
+
+        rmCache()
+
+    except KeyboardInterrupt:
+        print(f'{infoStr} Exiting...')
+        print(f'{infoStr} Deleting cache...')
+        rmCache()
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
