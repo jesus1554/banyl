@@ -4,14 +4,16 @@
 # Banyl 2021
 # Copyright (C) jesus1554 MIT Licence
 
+import json
 import os
+import shutil
+import sys
 
 import eyed3
 import requests
-import json
 import wget
-import shutil
 from termcolor import colored
+
 from extras import *
 
 successFiles = 0
