@@ -4,12 +4,12 @@
 import os
 
 import eyed3
-import eyed3.plugins.art
+# import eyed3.plugins.art
 import requests
 import json
 import wget
 import shutil
-
+from termcolor import colored
 
 
 def getDir():
@@ -21,14 +21,6 @@ def getDir():
         dirpath = getDir()
         return dirpath
 
-
-def checkDir(path):
-    for file_name in os.listdir(path):
-        if file_name.endswith('.mp3'):
-            return True
-        else:
-            return False
-            
 
 def checkSong(userRequest):
     rawResponse = requests.get(
@@ -60,6 +52,7 @@ def editTags(path):
             newTags = getSong(songTitle)
 
             audiofile.initTag()
+            audiofile.tag.clear()
 
             # Updating music tags from Deezer.com
             audiofile.tag.artist = newTags["artist"]["name"]
@@ -79,7 +72,8 @@ def editTags(path):
 
             audiofile.tag.save()
         else:
-            continue
+            print(f"{file_name} is not a compatible file extension. Skipping...")
+            pass
 
 
 def updateArtWork(song, tags):
@@ -90,13 +84,15 @@ def updateArtWork(song, tags):
 
     # Download ArtWork
     wget.download(tags["album"]["cover_big"], 'img-cache')
-    
+
     # Renaming
-    os.rename('img-cache/500x500-000000-80-0-0.jpg', f'img-cache/{tags["id"]}.jpg')
+    os.rename('img-cache/500x500-000000-80-0-0.jpg',
+              f'img-cache/{tags["id"]}.jpg')
     print('\n')
-    
+
     # Apply changes
-    song.tag.images.set(3, open(f'img-cache/{tags["id"]}.jpg', 'rb').read(), 'image/jpeg')
+    song.tag.images.set(
+        3, open(f'img-cache/{tags["id"]}.jpg', 'rb').read(), 'image/jpeg')
     song.tag.save()
 
 
@@ -105,13 +101,10 @@ def separator():
 
 
 if __name__ == "__main__":
+
     songsDir = getDir()
-    dirValidation = checkDir(songsDir)
-    if dirValidation:
-        editTags(songsDir)
-        print('All Done!')
-        print('Deleting cache...')
-        shutil.rmtree('img-cache')
-    else:
-        print(
-            'Sorry, for now, Banyl only accepts folders with all the files in mp3 format.')
+    editTags(songsDir)
+    print('All Done!')
+    print('Deleting cache...')
+    shutil.rmtree('img-cache')
+    
