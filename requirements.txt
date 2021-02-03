@@ -1,0 +1,4 @@
+requests
+eyed3
+wget
+termcolor

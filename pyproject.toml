@@ -1,0 +1,26 @@
+[project]
+name = "banyl"
+version = "0.5"
+description = "An easy-to-use tool to complete all the tags in your music catalog"
+authors = [
+    "Jesús Flores Espinoza <jesus.flores.esp@gmail.com>"
+]
+license = "MIT"
+python = "^3.8.5"
+repository = "https://github.com/jesus1554/banyl"
+
+keywords = ["music", "id3", "mp3tags", "mp3music", "music tags"]
+
+# Requirements
+[dependencies]
+eyed3 = "^0.9.6"
+requests = "^2.22.0"
+wget = "^3.2"
+termcolor = "^1.1.0"
+
+[build-system]
+requires = [
+    "setuptools >= 35.0.2",
+    "setuptools_scm >= 2.0.0, <3"
+]
+build-backend = "setuptools.build_meta"
