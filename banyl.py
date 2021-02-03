@@ -102,8 +102,6 @@ def editTags(path):
 
                 separator('green')
 
-            else:
-                pass
         else:
             print(
                 f"{warningStr} {file_name} is not a compatible file extension. Skipping...")
@@ -134,8 +132,7 @@ def updateArtWork(song, tags):
 def rmCache():
     if os.path.isdir("img-cache"):
         shutil.rmtree('img-cache')
-    else:
-        pass
+
 
 if __name__ == "__main__":
     try:
@@ -144,7 +141,15 @@ if __name__ == "__main__":
 
         separator('cyan')
 
-        songsDir = getDir(sys.argv[1])
+        argNum = 0
+        for arg in sys.argv:
+            argNum += 1
+        
+        if argNum >= 2:
+            songsDir = getDir(sys.argv[1])
+        else:
+            songsDir = getDir(False)
+        
         editTags(songsDir)
         print(colored('[✔] All the music files was edited. Done!', 'green'))
         print(f'{successStr} {successFiles} was correctly edited.')
