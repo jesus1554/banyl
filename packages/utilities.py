@@ -27,7 +27,7 @@ def getDir(path):
     if os.path.isdir(dirpath):
         return dirpath
     else:
-        print(colored("[■] Whoops! There was an error on the path, it doesn't exist or you forgot to put it!. \nTry again executing the program like this: python3 banyl.py [PATH]", 'red'))
+        print(colored("[■] Whoops! There was an error on the path, it doesn't exist or you forgot to put it!. \nTry again executing the program like this: ./banyl [PATH]", 'red'))
         sys.exit(0)
 
 
