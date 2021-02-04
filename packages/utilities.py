@@ -27,7 +27,7 @@ def getDir(path):
     if os.path.isdir(dirpath):
         return dirpath
     else:
-        print(colored("[⚠] Whoops! There was an error on the path, it doesn't exist or you forgot to put it!. \nTry again executing the program like this: python3 banyl.py [PATH]", 'red'))
+        print(colored("[■] Whoops! There was an error on the path, it doesn't exist or you forgot to put it!. \nTry again executing the program like this: python3 banyl.py [PATH]", 'red'))
         sys.exit(0)
 
 
@@ -151,7 +151,7 @@ def main():
             songsDir = getDir(False)
         
         editTags(songsDir)
-        print(colored('[✔] All the music files was edited. Done!', 'green'))
+        print(colored('[■] All the music files was edited. Done!', 'green'))
         print(f'{successStr} {successFiles} was correctly edited.')
         print(f'{warningStr} {ignoredFiles} was ignored.')
         print(f'{dangerStr} {notFoundFiles} was not found.')
