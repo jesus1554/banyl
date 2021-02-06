@@ -59,7 +59,7 @@ jtd.getTheme = function() {
 
 jtd.setTheme = function(theme) {
   var cssFile = document.querySelector('[rel="stylesheet"]');
-  cssFile.setAttribute('href', 'https://jesus1554.github.io/banyl//docs/assets/css/just-the-docs-' + theme + '.css');
+  cssFile.setAttribute('href', 'https://jesus1554.github.io/banyl//assets/css/just-the-docs-' + theme + '.css');
 }
 
 // Document ready

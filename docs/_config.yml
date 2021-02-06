@@ -1,6 +1,6 @@
 title: Banyl
 description: This is Banyl, an easy-to-use tool to complete all the tags in your music catalog
-baseurl: "/docs" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://jesus1554.github.io/banyl/" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: pretty
